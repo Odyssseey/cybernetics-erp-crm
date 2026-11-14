@@ -1,0 +1,56 @@
+# Python byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.Python
+venv/
+.venv/
+env/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs and editors (VS Code, PyCharm, Windsurf, Cursor)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Odoo specific files & directories
+filestore/
+sessions/
+.odoorc
+.openerp_serverrc
+odoo.log
+*.log
+dump.sql
+*.dump
+pgdata/
+odoo-data/
+
+# Environment variables & secrets
+.env
+.env.local
