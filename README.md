@@ -64,6 +64,12 @@ py -3.12 -m venv venv
 3. Перейдіть у **Apps → Update Apps List**, підтвердьте оновлення та знайдіть **Library Rental**.
 4. Натисніть **Activate**. Дочекайтеся завершення встановлення й перевірте журнал запуску. Відкрийте **List View** у списку застосунків і зробіть скріншот рядка модуля зі статусом **Installed**. У Docker журнал доступний через `docker compose logs odoo`. За запуску з вихідного коду журнал видно у PowerShell.
 
+## Скріншоти практичного заняття 1
+
+- [Library Rental зі статусом Installed у списку Apps](docs/practice-1/library-rental-installed.png)
+- [Пошук модуля у списку Apps](docs/practice-1/odoo-apps.png) і [сторінка встановленого модуля](docs/practice-1/odoo-module-info.png)
+- Перевірка AI-асистента у VS Code. [Запит і початок відповіді](docs/practice-1/vscode-ai-01.png), [структура модуля](docs/practice-1/vscode-ai-02.png), [приклад маніфесту](docs/practice-1/vscode-ai-03.png) і [пояснення його призначення](docs/practice-1/vscode-ai-04.png).
+
 ## Документування роботи з AI-асистентом (Практичне заняття 1, Крок 6)
 
 ### 1. Що згенерував AI-асистент
