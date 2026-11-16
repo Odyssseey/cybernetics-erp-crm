@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="demo_user_library_reader" model="res.users">
+        <field name="name">Олена Коваль (читач)</field>
+        <field name="login">library-reader</field>
+        <field name="group_ids" eval="[Command.set([ref('group_library_reader')])]"/>
+    </record>
+
+    <record id="demo_user_library_librarian" model="res.users">
+        <field name="name">Бібліотекар (демо)</field>
+        <field name="login">library-librarian</field>
+        <field name="group_ids" eval="[Command.set([ref('group_library_librarian')])]"/>
+    </record>
+
+    <record id="demo_member_olena" model="library.member">
+        <field name="user_id" ref="demo_user_library_reader"/>
+    </record>
+</odoo>

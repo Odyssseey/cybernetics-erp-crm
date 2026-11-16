@@ -1,4 +1,5 @@
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError
 
 
 class LibraryCopy(models.Model):
@@ -20,3 +21,9 @@ class LibraryCopy(models.Model):
     _unique_inventory_number = models.Constraint(
         'UNIQUE(inventory_number)', 'Інвентарний номер має бути унікальним.',
     )
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        if not self.env.su and not self.env.user.has_group('library_rental.group_library_librarian'):
+            raise AccessError(_('Екрани керування примірниками доступні лише бібліотекарю.'))
+        return super().get_view(view_id, view_type, **options)

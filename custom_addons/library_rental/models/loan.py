@@ -20,6 +20,10 @@ class LibraryLoan(models.Model):
 
     copy_id = fields.Many2one('library.copy', string='Примірник', required=True, ondelete='restrict')
     member_id = fields.Many2one('library.member', string='Читач', required=True, ondelete='restrict')
+    reader_user_id = fields.Many2one(
+        'res.users', string='Обліковий запис читача', related='member_id.user_id',
+        store=True, ondelete='set null',
+    )
     loan_date = fields.Date(string='Дата видачі', required=True, default=fields.Date.context_today)
     due_date = fields.Date(
         string='Повернути до', compute='_compute_due_date',

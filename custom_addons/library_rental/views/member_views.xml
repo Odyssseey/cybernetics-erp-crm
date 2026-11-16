@@ -7,6 +7,7 @@
             <list string="Читачі">
                 <field name="name"/>
                 <field name="membership_number"/>
+                <field name="user_id" optional="show"/>
             </list>
         </field>
     </record>
@@ -21,6 +22,7 @@
                         <group>
                             <field name="name"/>
                             <field name="membership_number"/>
+                            <field name="user_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
