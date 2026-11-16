@@ -95,22 +95,19 @@
         <field name="copy_id" ref="demo_copy_forest_song_1"/>
         <field name="member_id" ref="demo_member_olena"/>
         <field name="loan_date" eval="(DateTime.today() - relativedelta(days=21)).strftime('%Y-%m-%d')"/>
-        <field name="due_date" eval="(DateTime.today() - relativedelta(days=7)).strftime('%Y-%m-%d')"/>
     </record>
 
     <record id="demo_loan_current" model="library.loan">
         <field name="copy_id" ref="demo_copy_cassandra_1"/>
         <field name="member_id" ref="demo_member_andrii"/>
         <field name="loan_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d')"/>
-        <field name="due_date" eval="(DateTime.today() + relativedelta(days=11)).strftime('%Y-%m-%d')"/>
     </record>
 
     <record id="demo_loan_returned" model="library.loan">
         <field name="copy_id" ref="demo_copy_zahar_berkut_1"/>
         <field name="member_id" ref="demo_member_marta"/>
         <field name="loan_date" eval="(DateTime.today() - relativedelta(days=30)).strftime('%Y-%m-%d')"/>
-        <field name="due_date" eval="(DateTime.today() - relativedelta(days=16)).strftime('%Y-%m-%d')"/>
-        <field name="return_date" eval="(DateTime.today() - relativedelta(days=19)).strftime('%Y-%m-%d')"/>
+        <field name="return_date" eval="(DateTime.today() - relativedelta(days=12)).strftime('%Y-%m-%d')"/>
         <field name="state">returned</field>
     </record>
 
@@ -118,7 +115,6 @@
         <field name="copy_id" ref="demo_copy_kaidash_family_1"/>
         <field name="member_id" ref="demo_member_olena"/>
         <field name="loan_date" eval="(DateTime.today() - relativedelta(days=18)).strftime('%Y-%m-%d')"/>
-        <field name="due_date" eval="(DateTime.today() - relativedelta(days=4)).strftime('%Y-%m-%d')"/>
         <field name="return_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d')"/>
         <field name="state">returned</field>
     </record>
