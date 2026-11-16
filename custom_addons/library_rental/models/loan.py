@@ -1,3 +1,4 @@
+import logging
 from contextlib import contextmanager
 from datetime import timedelta
 
@@ -7,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
+_logger = logging.getLogger(__name__)
 LOAN_TERM_DAYS = 14
 DAILY_FINE_UAH = 5.0
 ACTIVE_COPY_CONFLICT = 'Цей примірник уже має активну видачу.'
@@ -72,6 +74,36 @@ class LibraryLoan(models.Model):
         today = fields.Date.context_today(self)
         for loan in self:
             loan.is_overdue = bool(loan.state == 'active' and loan.due_date and loan.due_date < today)
+
+    @api.model
+    def _cron_check_overdue_loans(self):
+        overdue_loans = self.search([
+            ('state', '=', 'active'),
+            ('due_date', '<', fields.Date.context_today(self)),
+        ])
+        failed = 0
+        for loan in overdue_loans:
+            try:
+                with self.env.cr.savepoint():
+                    loan._log_overdue_loan()
+            except Exception:
+                failed += 1
+                _logger.exception('Не вдалося обробити прострочену видачу ID=%s.', loan.id)
+
+        _logger.info(
+            'Перевірка прострочення: знайдено %s, оброблено %s, помилок %s.',
+            len(overdue_loans), len(overdue_loans) - failed, failed,
+        )
+
+    def _log_overdue_loan(self):
+        self.ensure_one()
+        inventory_number = self.copy_id.inventory_number
+        if not inventory_number:
+            raise ValueError('У видачі відсутній інвентарний номер примірника.')
+        _logger.info(
+            'Прострочена видача ID=%s, примірник %s, повернути до %s.',
+            self.id, inventory_number, self.due_date,
+        )
 
     def _find_other_active_loan(self, copy, excluded_id):
         return self.sudo().search([

@@ -1,0 +1,9 @@
+Odoo 19 — ручний запуск cron, практичне заняття 6
+Settings → Technical → Scheduled Actions → Library: перевірка прострочених видач → Run Manually
+Демобаза library_practice6_demo після оформлення повернення LBR-001.
+
+2026-11-16 20:29:42,092 3716 INFO library_practice6_demo odoo.addons.base.models.ir_cron: Job 'Library: перевірка прострочених видач' (3) starting
+2026-11-16 20:29:42,176 3716 INFO library_practice6_demo odoo.addons.library_rental.models.loan: Прострочена видача ID=5, примірник LBR-010, повернути до 2026-11-05.
+2026-11-16 20:29:42,176 3716 INFO library_practice6_demo odoo.addons.library_rental.models.loan: Перевірка прострочення: знайдено 1, оброблено 1, помилок 0.
+2026-11-16 20:29:42,184 3716 INFO library_practice6_demo odoo.addons.base.models.ir_cron: Job 'Library: перевірка прострочених видач' (3) fully done (#loop 1; done 0; remaining 0; duration 0.09s)
+2026-11-16 20:29:42,188 3716 INFO library_practice6_demo werkzeug: 127.0.0.1 - - [16/Nov/2026 20:29:42] "POST /web/dataset/call_button/ir.cron/method_direct_trigger#ir.cron.method_direct_trigger HTTP/1.1" 200 - 31 0.060 0.050

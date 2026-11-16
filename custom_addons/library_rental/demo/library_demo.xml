@@ -28,6 +28,27 @@
         <field name="publish_year">1879</field>
     </record>
 
+    <record id="demo_book_kobzar" model="library.book">
+        <field name="name">Кобзар</field>
+        <field name="author">Тарас Шевченко</field>
+        <field name="isbn">9789660000056</field>
+        <field name="publish_year">1840</field>
+    </record>
+
+    <record id="demo_book_city" model="library.book">
+        <field name="name">Місто</field>
+        <field name="author">Валер’ян Підмогильний</field>
+        <field name="isbn">9789660000063</field>
+        <field name="publish_year">1928</field>
+    </record>
+
+    <record id="demo_book_tiger_trappers" model="library.book">
+        <field name="name">Тигролови</field>
+        <field name="author">Іван Багряний</field>
+        <field name="isbn">9789660000070</field>
+        <field name="publish_year">1944</field>
+    </record>
+
     <record id="demo_copy_forest_song_1" model="library.copy">
         <field name="book_id" ref="demo_book_forest_song"/>
         <field name="inventory_number">LBR-001</field>
@@ -76,6 +97,48 @@
         <field name="condition">new</field>
     </record>
 
+    <record id="demo_copy_forest_song_3" model="library.copy">
+        <field name="book_id" ref="demo_book_forest_song"/>
+        <field name="inventory_number">LBR-009</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_kobzar_1" model="library.copy">
+        <field name="book_id" ref="demo_book_kobzar"/>
+        <field name="inventory_number">LBR-010</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_kobzar_2" model="library.copy">
+        <field name="book_id" ref="demo_book_kobzar"/>
+        <field name="inventory_number">LBR-011</field>
+        <field name="condition">new</field>
+    </record>
+
+    <record id="demo_copy_city_1" model="library.copy">
+        <field name="book_id" ref="demo_book_city"/>
+        <field name="inventory_number">LBR-012</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_city_2" model="library.copy">
+        <field name="book_id" ref="demo_book_city"/>
+        <field name="inventory_number">LBR-013</field>
+        <field name="condition">new</field>
+    </record>
+
+    <record id="demo_copy_tiger_trappers_1" model="library.copy">
+        <field name="book_id" ref="demo_book_tiger_trappers"/>
+        <field name="inventory_number">LBR-014</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_tiger_trappers_2" model="library.copy">
+        <field name="book_id" ref="demo_book_tiger_trappers"/>
+        <field name="inventory_number">LBR-015</field>
+        <field name="condition">damaged</field>
+    </record>
+
     <record id="demo_member_olena" model="library.member">
         <field name="name">Олена Коваль</field>
         <field name="membership_number">ЧК-001</field>
@@ -89,6 +152,11 @@
     <record id="demo_member_marta" model="library.member">
         <field name="name">Марта Бондар</field>
         <field name="membership_number">ЧК-003</field>
+    </record>
+
+    <record id="demo_member_sofia" model="library.member">
+        <field name="name">Софія Савчук</field>
+        <field name="membership_number">ЧК-004</field>
     </record>
 
     <record id="demo_loan_overdue" model="library.loan">
@@ -118,4 +186,24 @@
         <field name="return_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d')"/>
         <field name="state">returned</field>
     </record>
+    <record id="demo_loan_kobzar_overdue" model="library.loan">
+        <field name="copy_id" ref="demo_copy_kobzar_1"/>
+        <field name="member_id" ref="demo_member_sofia"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=25)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="demo_loan_city_current" model="library.loan">
+        <field name="copy_id" ref="demo_copy_city_1"/>
+        <field name="member_id" ref="demo_member_marta"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="demo_loan_tigers_returned" model="library.loan">
+        <field name="copy_id" ref="demo_copy_tiger_trappers_1"/>
+        <field name="member_id" ref="demo_member_andrii"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=25)).strftime('%Y-%m-%d')"/>
+        <field name="return_date" eval="(DateTime.today() - relativedelta(days=8)).strftime('%Y-%m-%d')"/>
+        <field name="state">returned</field>
+    </record>
+
 </odoo>
