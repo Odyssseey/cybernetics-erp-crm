@@ -23,6 +23,11 @@
         <field name="model">library.loan</field>
         <field name="arch" type="xml">
             <form string="Видача">
+                <header>
+                    <button name="%(action_library_return_wizard)d" type="action" class="btn-primary"
+                            string="Оформити повернення" context="{'default_loan_id': id}"
+                            invisible="not id or state != 'active'" groups="library_rental.group_library_librarian"/>
+                </header>
                 <sheet>
                     <group>
                         <group>

@@ -2,6 +2,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
 
 
+COPY_CONDITIONS = [('new', 'Новий'), ('good', 'Добрий'), ('damaged', 'Пошкоджений')]
+
+
 class LibraryCopy(models.Model):
     _name = 'library.copy'
     _description = 'Примірник книги'
@@ -11,7 +14,7 @@ class LibraryCopy(models.Model):
     book_id = fields.Many2one('library.book', string='Книга', required=True, ondelete='restrict')
     inventory_number = fields.Char(string='Інвентарний номер', required=True)
     condition = fields.Selection(
-        [('new', 'Новий'), ('good', 'Добрий'), ('damaged', 'Пошкоджений')],
+        COPY_CONDITIONS,
         string='Стан примірника',
         required=True,
         default='good',

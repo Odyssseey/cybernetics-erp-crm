@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_member_loan_history">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="member">
+                <t t-set="o" t-value="member"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Історія видач читача</h2>
+                        <p>
+                            <strong t-field="member.name"/>
+                            <br/>
+                            Читацький квиток: <span t-field="member.membership_number"/>
+                        </p>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Книга</th>
+                                    <th>Дата видачі</th>
+                                    <th>Фактичне повернення</th>
+                                    <th>Статус</th>
+                                    <th class="text-end">Штраф, грн</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="member.loan_ids" t-as="loan">
+                                    <td><span t-field="loan.copy_id.book_id.name"/></td>
+                                    <td><span t-field="loan.loan_date"/></td>
+                                    <td><span t-field="loan.return_date"/></td>
+                                    <td><span t-field="loan.state"/></td>
+                                    <td class="text-end"><span t-field="loan.fine_amount"/></td>
+                                </tr>
+                                <tr t-if="not member.loan_ids">
+                                    <td colspan="5">У цього читача ще немає видач.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_member_loan_history" model="ir.actions.report">
+        <field name="name">Історія видач читача</field>
+        <field name="model">library.member</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">library_rental.report_member_loan_history</field>
+        <field name="binding_model_id" ref="model_library_member"/>
+        <field name="binding_type">report</field>
+        <field name="binding_view_types">form</field>
+        <field name="group_ids" eval="[Command.set([ref('group_library_librarian')])]"/>
+    </record>
+</odoo>

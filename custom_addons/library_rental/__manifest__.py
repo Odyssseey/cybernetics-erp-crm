@@ -1,6 +1,6 @@
 {
     'name': 'Library Rental',
-    'version': '19.0.4.0.0',
+    'version': '19.0.5.0.0',
     'category': 'Services/Library',
     'summary': 'Каталог бібліотеки, фізичні примірники, читачі та видачі (Трек A)',
     'description': """
@@ -13,6 +13,7 @@ Library Rental (Бібліотека / Прокат)
     'license': 'LGPL-3',
     'depends': [
         'base',
+        'web',
     ],
     'data': [
         'security/library_security.xml',
@@ -20,8 +21,10 @@ Library Rental (Бібліотека / Прокат)
         'views/book_views.xml',
         'views/copy_views.xml',
         'views/member_views.xml',
+        'views/return_wizard_views.xml',
         'views/loan_views.xml',
         'views/library_menus.xml',
+        'report/report_member_loan_history.xml',
     ],
     'demo': ['demo/library_demo.xml', 'demo/library_users_demo.xml'],
     'installable': True,
