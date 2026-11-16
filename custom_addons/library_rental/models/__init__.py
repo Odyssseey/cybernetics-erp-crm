@@ -1,3 +1,4 @@
-# Пакет моделей модуля library_rental.
-# На Практичному занятті 2 сюди будуть додані моделі:
-# Book, Copy, Member та Loan.
+from . import book
+from . import copy
+from . import member
+from . import loan

@@ -10,16 +10,22 @@ cybernetics_ERP_CRM/
 ├── README.md
 ├── docker-compose.yml
 ├── odoo.conf
+├── start-odoo.bat
 └── custom_addons/
     └── library_rental/
         ├── __init__.py
         ├── __manifest__.py
         ├── models/
-        │   └── __init__.py
+        │   ├── __init__.py
+        │   ├── book.py
+        │   ├── copy.py
+        │   ├── member.py
+        │   └── loan.py
+        ├── demo/
+        │   └── library_demo.xml
         ├── security/
-        │   └── .gitkeep
-        └── views/
-            └── .gitkeep
+        │   └── ir.model.access.csv
+        └── views/   # Списки, форми, дії та меню бібліотеки
 ```
 
 ## Як запустити середовище (Odoo 19 + PostgreSQL 15+)
@@ -106,3 +112,72 @@ py -3.12 -m venv venv
 У файлі `__manifest__.py` вказано єдину залежність `'depends': ['base']`, тому що:
 - Модуль `base` є обов'язковим ядром Odoo (забезпечує роботу ORM `models.Model`, базових полів, прав доступу `ir.model.access`, системних користувачів `res.users` та базового інтерфейсу).
 - На етапі Практичного заняття 1 ми створюємо лише чистий каркас без бізнес-моделей. Додавання `contacts` (якщо не використовується розширення `res.partner` прямо зараз), `mail` (chatter/повідомлення) або `sale` лише збільшить час завантаження реєстру модулів і створить зайві таблиці в БД.
+
+## Практичне заняття 2. Моделі бібліотеки та ORM
+
+| Зв’язок | Поля | Чому так |
+| --- | --- | --- |
+| Книга → примірники (1:N) | `copy_ids` ↔ `book_id` | Назва, автор і ISBN описують книгу. Інвентарний номер і стан належать фізичному примірнику. |
+| Примірник → видачі (1:N) | `loan_ids` ↔ `copy_id` | Видача стосується конкретного примірника. За його історією можна визначити, чи він вільний. |
+| Читач → видачі (1:N) | `loan_ids` ↔ `member_id` | Читач може мати кілька видач. Його ідентифікує унікальний номер читацького квитка. |
+
+Поле `book_id` обов’язкове й має `ondelete='restrict'`, щоб видалення книги з примірниками було заблоковано. Поля `copy_id` і `member_id` теж обов’язкові та мають `ondelete='restrict'`, щоб зберігати історію видач. У формі видачі видно назву, автора й ISBN книги та номер читацького квитка.
+
+Відхилення від рекомендованої структури — окрема модель `library.member` із власним ім’ям і номером квитка. Це один із дозволених варіантів кроку 3. Вона не створює записів у `res.partner`, тож читачів можна вести окремо від контактів Odoo. Якщо знадобиться спільна адресна книга, інтеграцію з контактами треба буде додати. Для модуля й далі достатньо залежності `base`.
+
+Дата видачі за замовчуванням — сьогодні, статус — `active`. Планова дата повернення обов’язкова, щоб активну видачу можна було перевірити на прострочення. Фактична дата необов’язкова. Правило «одна активна видача на примірник» описує предметну область. Автоматичне обмеження додається в практичній №3 за методичкою.
+
+### Демо та перевірка ORM
+
+У меню **Бібліотека** є книги, примірники, читачі та видачі. Демо містить 4 книги, 8 примірників, 3 читачів і 4 видачі.
+
+Для окремої локальної бази з демоданими можна встановити модуль і відкрити Odoo shell такими командами з кореня репозиторію. Для локального PostgreSQL на порту `5433` додайте `--db_port=5433` до обох команд.
+
+```powershell
+.\venv\Scripts\python.exe .\odoo19\odoo-bin -c .\odoo.conf -d library_practice2_demo -i library_rental --with-demo --no-http --stop-after-init
+.\venv\Scripts\python.exe .\odoo19\odoo-bin shell -c .\odoo.conf -d library_practice2_demo
+```
+
+Якщо модуль уже встановлено з практичної №1, оновіть його через **Apps → Library Rental → Upgrade**. Демодані призначені для окремої бази.
+
+```python
+from datetime import timedelta
+from odoo import fields
+
+book = env.ref('library_rental.demo_book_forest_song')
+member = env.ref('library_rental.demo_member_andrii')
+today = fields.Date.context_today(env['library.loan'])
+
+books = env['library.book'].search([('author', '=', 'Леся Українка')])
+print(books.mapped('name'))
+
+free_domain = [
+    ('book_id', '=', book.id),
+    ('loan_ids', 'not any', [('state', '=', 'active')]),
+]
+print(env['library.copy'].search_count(free_domain))
+free_copy = env['library.copy'].search(free_domain, limit=1)
+
+overdue = env['library.loan'].search([('state', '=', 'active'), ('due_date', '<', today)])
+print(overdue.mapped('copy_id.inventory_number'))
+
+loan = env['library.loan'].create({
+    'copy_id': free_copy.id,
+    'member_id': member.id,
+    'due_date': today + timedelta(days=14),
+})
+print(loan.state)
+loan.write({'state': 'returned', 'return_date': today})
+print(loan.state, loan.return_date)
+env.cr.rollback()
+```
+
+[Фактичний вивід Odoo shell](docs/practice-2/orm-shell.txt). Тестова видача після перевірки відкочується, тому демодані можна використати повторно.
+
+### Що згенерував AI
+
+Запит — реалізувати у чинному `library_rental` чотири моделі Odoo 19 за методичкою, додати списки й форми, демонстраційні записи та виконати чотири ORM-операції. AI підготував файли моделей, права доступу, XML, команди й фактичний вивід перевірки.
+
+### Ручні правки та перевірені рішення
+
+Реалізацію та перевірку виконано за допомогою AI. Окремі ручні правки студента на цьому етапі не зафіксовані. Під час рев’ю перевірено `ondelete='restrict'` у всіх трьох зв’язках, обов’язковість полів, унікальність номера квитка та порожню дату повернення в активній видачі.

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="demo_book_forest_song" model="library.book">
+        <field name="name">Лісова пісня</field>
+        <field name="author">Леся Українка</field>
+        <field name="isbn">9789660000018</field>
+        <field name="publish_year">1912</field>
+    </record>
+
+    <record id="demo_book_cassandra" model="library.book">
+        <field name="name">Кассандра</field>
+        <field name="author">Леся Українка</field>
+        <field name="isbn">9789660000025</field>
+        <field name="publish_year">1908</field>
+    </record>
+
+    <record id="demo_book_zahar_berkut" model="library.book">
+        <field name="name">Захар Беркут</field>
+        <field name="author">Іван Франко</field>
+        <field name="isbn">9789660000032</field>
+        <field name="publish_year">1883</field>
+    </record>
+
+    <record id="demo_book_kaidash_family" model="library.book">
+        <field name="name">Кайдашева сім’я</field>
+        <field name="author">Іван Нечуй-Левицький</field>
+        <field name="isbn">9789660000049</field>
+        <field name="publish_year">1879</field>
+    </record>
+
+    <record id="demo_copy_forest_song_1" model="library.copy">
+        <field name="book_id" ref="demo_book_forest_song"/>
+        <field name="inventory_number">LBR-001</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_forest_song_2" model="library.copy">
+        <field name="book_id" ref="demo_book_forest_song"/>
+        <field name="inventory_number">LBR-002</field>
+        <field name="condition">new</field>
+    </record>
+
+    <record id="demo_copy_cassandra_1" model="library.copy">
+        <field name="book_id" ref="demo_book_cassandra"/>
+        <field name="inventory_number">LBR-003</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_cassandra_2" model="library.copy">
+        <field name="book_id" ref="demo_book_cassandra"/>
+        <field name="inventory_number">LBR-004</field>
+        <field name="condition">new</field>
+    </record>
+
+    <record id="demo_copy_zahar_berkut_1" model="library.copy">
+        <field name="book_id" ref="demo_book_zahar_berkut"/>
+        <field name="inventory_number">LBR-005</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_zahar_berkut_2" model="library.copy">
+        <field name="book_id" ref="demo_book_zahar_berkut"/>
+        <field name="inventory_number">LBR-006</field>
+        <field name="condition">damaged</field>
+    </record>
+
+    <record id="demo_copy_kaidash_family_1" model="library.copy">
+        <field name="book_id" ref="demo_book_kaidash_family"/>
+        <field name="inventory_number">LBR-007</field>
+        <field name="condition">good</field>
+    </record>
+
+    <record id="demo_copy_kaidash_family_2" model="library.copy">
+        <field name="book_id" ref="demo_book_kaidash_family"/>
+        <field name="inventory_number">LBR-008</field>
+        <field name="condition">new</field>
+    </record>
+
+    <record id="demo_member_olena" model="library.member">
+        <field name="name">Олена Коваль</field>
+        <field name="membership_number">ЧК-001</field>
+    </record>
+
+    <record id="demo_member_andrii" model="library.member">
+        <field name="name">Андрій Мельник</field>
+        <field name="membership_number">ЧК-002</field>
+    </record>
+
+    <record id="demo_member_marta" model="library.member">
+        <field name="name">Марта Бондар</field>
+        <field name="membership_number">ЧК-003</field>
+    </record>
+
+    <record id="demo_loan_overdue" model="library.loan">
+        <field name="copy_id" ref="demo_copy_forest_song_1"/>
+        <field name="member_id" ref="demo_member_olena"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=21)).strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(DateTime.today() - relativedelta(days=7)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="demo_loan_current" model="library.loan">
+        <field name="copy_id" ref="demo_copy_cassandra_1"/>
+        <field name="member_id" ref="demo_member_andrii"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(DateTime.today() + relativedelta(days=11)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="demo_loan_returned" model="library.loan">
+        <field name="copy_id" ref="demo_copy_zahar_berkut_1"/>
+        <field name="member_id" ref="demo_member_marta"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(DateTime.today() - relativedelta(days=16)).strftime('%Y-%m-%d')"/>
+        <field name="return_date" eval="(DateTime.today() - relativedelta(days=19)).strftime('%Y-%m-%d')"/>
+        <field name="state">returned</field>
+    </record>
+
+    <record id="demo_loan_returned_second" model="library.loan">
+        <field name="copy_id" ref="demo_copy_kaidash_family_1"/>
+        <field name="member_id" ref="demo_member_olena"/>
+        <field name="loan_date" eval="(DateTime.today() - relativedelta(days=18)).strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(DateTime.today() - relativedelta(days=4)).strftime('%Y-%m-%d')"/>
+        <field name="return_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+        <field name="state">returned</field>
+    </record>
+</odoo>
