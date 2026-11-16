@@ -14,7 +14,6 @@ Library Rental (Бібліотека / Прокат)
 - Loan (Видача / Прокат)
     """,
     'author': 'Maxim Drobov (Odyssey)',
-    'website': 'https://github.com/Oddysey1326/cybernetics_ERP_CRM',
     'license': 'LGPL-3',
     'depends': [
         'base',

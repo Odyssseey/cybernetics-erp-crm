@@ -54,3 +54,5 @@ odoo-data/
 # Environment variables & secrets
 .env
 .env.local
+
+odoo19/

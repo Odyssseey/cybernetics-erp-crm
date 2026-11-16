@@ -24,20 +24,45 @@ cybernetics_ERP_CRM/
 
 ## Як запустити середовище (Odoo 19 + PostgreSQL 15+)
 
-### Варіант 1: Через Docker Compose (рекомендовано)
+### Варіант 1. Через Docker Compose
+
+Якщо Docker запущений, виконайте в корені репозиторію:
+
 ```bash
 docker compose up -d
 ```
-Після запуску відкрийте `http://localhost:8069`, створіть порожню базу даних, увімкніть режим розробника (**Settings → Activate the developer mode**), натисніть **Apps → Update Apps List**, знайдіть `Library Rental` (`library_rental`) та натисніть **Activate**.
+Compose запускає Odoo 19 з `--dev=all`, PostgreSQL 16 і підключає `custom_addons/` до Odoo.
 
-### Варіант 2: Локальний запуск з вихідного коду Odoo 19
-```bash
-git clone https://github.com/odoo/odoo.git --depth 1 --branch 19.0 odoo19
-python -m venv venv
-# Windows: venv\Scripts\activate | Linux/macOS: source venv/bin/activate
-pip install -r odoo19/requirements.txt
-python odoo19/odoo-bin -r odoo -w odoo --addons-path=odoo19/addons,custom_addons -d library_db --dev=all
+### Варіант 2. З вихідного коду на Windows
+
+Встановіть Python 3.12 і PostgreSQL 15 або новішу версію. Запустіть PostgreSQL на `127.0.0.1:5432`. У `psql` під адміністратором PostgreSQL виконайте один раз:
+
+```sql
+CREATE ROLE odoo LOGIN CREATEDB;
+\password odoo
 ```
+
+Введіть пароль ролі, який відповідає `db_password` у `odoo.conf`. Для локальної конфігурації в репозиторії це `odoo`. Якщо PostgreSQL використовує інший порт, передайте його параметром `--db_port`.
+
+У PowerShell, у корені репозиторію:
+
+```powershell
+git clone --depth 1 --branch 19.0 https://github.com/odoo/odoo.git odoo19
+py -3.12 -m venv venv
+.\venv\Scripts\python.exe -m pip install -r .\odoo19\requirements.txt pywin32
+.\venv\Scripts\python.exe .\odoo19\odoo-bin -c .\odoo.conf --dev=all
+```
+
+Якщо `odoo19/` уже є, пропустіть клонування. Створюйте `venv/` на тому комп’ютері, де запускаєте проєкт.
+
+Якщо локальну базу `library_db` уже налаштовано в каталозі `pgdata/`, двічі натисніть [start-odoo.bat](start-odoo.bat). Він запускає PostgreSQL на порту `5433` і Odoo на порту `8069`, а тоді відкриває базу в браузері. Якщо PostgreSQL встановлений в іншій папці, задайте змінну `ODOO_PG_BIN` зі шляхом до її каталогу `bin`.
+
+### Встановлення Library Rental
+
+1. Відкрийте `http://localhost:8069` і створіть базу `library_db` без демонстраційних даних.
+2. Увімкніть режим розробника через **Settings → Activate the developer mode**.
+3. Перейдіть у **Apps → Update Apps List**, підтвердьте оновлення та знайдіть **Library Rental**.
+4. Натисніть **Activate**. Дочекайтеся завершення встановлення й перевірте журнал запуску. Відкрийте **List View** у списку застосунків і зробіть скріншот рядка модуля зі статусом **Installed**. У Docker журнал доступний через `docker compose logs odoo`. За запуску з вихідного коду журнал видно у PowerShell.
 
 ## Документування роботи з AI-асистентом (Практичне заняття 1, Крок 6)
 
@@ -57,8 +82,7 @@ python odoo19/odoo-bin -r odoo -w odoo --addons-path=odoo19/addons,custom_addons
 Після критичного рев'ю коду, згенерованого AI-асистентом, було внесено такі ручні виправлення у `__manifest__.py` та файлову структуру модуля:
 
 1. **Виправлено формат версії у `__manifest__.py` (`version`):**
-   - AI-асистент згенерував скорочену версію `'1.0'` (або шаблон від старішої гілки `'17.0.1.0.0'`).
-   - Вручну виправлено на `'19.0.1.0.0'`, щоб суворо відповідати конвенції версіонування Odoo 19 (`19.0.x.x.x`).
+   - Установлено `'19.0.1.0.0'` відповідно до формату `19.0.x.x.x` із завдання.
 2. **Очищено список залежностей (`depends`):**
    - AI-асистент додав «про всяк випадок» зайві модулі `['base', 'mail', 'contacts', 'web']`.
    - Вручну видалено `mail`, `contacts` та `web`, залишено виключно `['base']`. Це відповідає вимогам завдання: на старті читачі ще не прив'язані до `res.partner`, а зайві залежності сповільнюють запуск інстансу та ініціалізацію бази даних, підтягуючи непотрібні таблиці й дані.
